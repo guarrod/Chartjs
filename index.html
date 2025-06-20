@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Line Chart Interpolation Modes</title>
+    <style>
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <div style="width:75%;">
+        <canvas id="myChart"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+const DATA_COUNT = 12;
+const labels = [];
+for (let i = 0; i < DATA_COUNT; ++i) {
+  labels.push(i.toString());
+}
+const datapoints = [0, 20, 20, 60, 60, 120, 50, 180, 120, 125, 105, 110, 170];
+const datapoints2 = [0, 10, 120, 160, 60, 20, 80, 180, 10, 25, 5, 10, 170];
+const datapoints3 = [0, 60, 300, 50, 80, 100, 180, 280, 300, 250, 50, 100, 17];
+const data = {
+  labels: labels,
+  datasets: [
+    {
+      label: 'Cubic interpolation (monotone)',
+      data: datapoints,
+      borderColor: 'rgba(200, 223, 253, 1)',
+      fill: {
+              target: 'origin',
+              above: 'rgba(200, 223, 253, 0.3)',   // Area will be blue above the origin
+            },
+      cubicInterpolationMode: 'monotone',
+      tension: 0.2
+    }, {
+      label: 'Cubic interpolation',
+      data: datapoints2,
+      borderColor: 'rgba(246, 204, 226, 1)',
+      fill: {
+              target: 'origin',
+              above: 'rgba(246, 204, 226, 0.3)',   // Area will be blue above the origin
+            },
+      tension: 0.2
+    }, {
+      label: 'Linear interpolation (default)',
+      data: datapoints3,
+      borderColor: 'rgba(205, 236, 215, 1)',
+      fill: {
+              target: 'origin',
+              above: 'rgba(205, 236, 215, 0.3)',   // Area will be blue above the origin
+            },
+      tension: 0.2
+    }
+  ]
+};
+
+const ctx = document.getElementById('myChart').getContext('2d');
+const myChart = new Chart(ctx, {
+    type: 'line',
+    data: data,
+    options: {
+        responsive: true,
+        plugins: {
+            title: {
+                display: true,
+                text: 'Chart.js Line Chart Interpolation Modes'
+            },
+            tooltip: {
+                mode: 'index',
+                intersect: false,
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+    </script>
+</body>
+</html>
