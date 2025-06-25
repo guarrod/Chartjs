@@ -59,25 +59,56 @@ const data = {
   ]
 };
 
-// Background image plugin
+// Refactored Background image plugin
 const chartAreaBackgroundImagePlugin = {
   id: 'chartAreaBackgroundImage',
-  beforeDraw: (chart) => {
-    if (chart.config.options.plugins.chartAreaBackgroundImage && chart.config.options.plugins.chartAreaBackgroundImage.image) {
-      const img = new Image();
-      img.src = chart.config.options.plugins.chartAreaBackgroundImage.image;
+  _backgroundImage: null, // To store the Image object
+  _imageLoaded: false,    // To track if the image has loaded successfully
+  _imageError: false,     // To track if there was an error loading
 
-      img.onload = () => {
-        const ctx = chart.ctx;
-        const chartArea = chart.chartArea;
-        if (chartArea) { // Ensure chartArea is defined
-          ctx.drawImage(img, chartArea.left, chartArea.top, chartArea.right - chartArea.left, chartArea.bottom - chartArea.top);
-        }
+  // Initialize the image object and start loading
+  // This 'afterInit' hook runs once per chart instance after initialization.
+  afterInit: (chart) => {
+    const imageUrl = chart.config.options.plugins.chartAreaBackgroundImage && chart.config.options.plugins.chartAreaBackgroundImage.image;
+    if (imageUrl) {
+      chartAreaBackgroundImagePlugin._backgroundImage = new Image();
+      chartAreaBackgroundImagePlugin._backgroundImage.src = imageUrl;
+
+      chartAreaBackgroundImagePlugin._backgroundImage.onload = () => {
+        chartAreaBackgroundImagePlugin._imageLoaded = true;
+        // Request a redraw now that the image is loaded
+        // This is important if the chart drew before the image was ready
+        chart.draw();
       };
-      img.onerror = () => {
-        console.error('Error loading background image for chart.');
+      chartAreaBackgroundImagePlugin._backgroundImage.onerror = () => {
+        chartAreaBackgroundImagePlugin._imageError = true;
+        console.error('Error loading background image for chart: ' + imageUrl);
       };
     }
+  },
+
+  beforeDraw: (chart) => {
+    // Only draw if the image is loaded and there was no error
+    if (chartAreaBackgroundImagePlugin._imageLoaded && !chartAreaBackgroundImagePlugin._imageError && chartAreaBackgroundImagePlugin._backgroundImage) {
+      const ctx = chart.ctx;
+      const chartArea = chart.chartArea;
+      if (chartArea) { // Ensure chartArea is defined
+        ctx.drawImage(
+          chartAreaBackgroundImagePlugin._backgroundImage,
+          chartArea.left,
+          chartArea.top,
+          chartArea.right - chartArea.left,
+          chartArea.bottom - chartArea.top
+        );
+      }
+    }
+  },
+
+  // Clean up when chart is destroyed (optional but good practice)
+  afterDestroy: () => {
+    chartAreaBackgroundImagePlugin._backgroundImage = null;
+    chartAreaBackgroundImagePlugin._imageLoaded = false;
+    chartAreaBackgroundImagePlugin._imageError = false;
   }
 };
 
