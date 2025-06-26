@@ -331,9 +331,10 @@ function generateCustomLegend() {
     legendItem.classList.add('custom-legend-item');
     legendItem.style.backgroundColor = dataset.borderColor; // Use dataset's borderColor for background
     legendItem.style.borderRadius = '4px';
-    legendItem.style.padding = '5px 10px';
+    legendItem.style.padding = '3px 8px';
     legendItem.style.margin = '5px';
     legendItem.style.color = '#121212'; // White text color - assuming backgrounds will be dark enough
+    legendItem.style.fontSize = '14px'; // Added
     legendItem.style.cursor = 'pointer';
     legendItem.style.display = 'inline-flex'; // Use flex for alignment if adding a swatch
     legendItem.style.alignItems = 'center';
