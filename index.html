@@ -281,8 +281,8 @@ const myChart = new Chart(ctx, {
                 text: 'Chart.js Line Chart Interpolation Modes' // Text can remain, it just won't be shown
             },
             tooltip: {
-                mode: 'index',
-                intersect: false,
+                mode: 'nearest', // Changed
+                intersect: true,  // Changed
                 backgroundColor: '#ffffff',
                 padding: 16,
                 titleColor: '#000000',
@@ -293,19 +293,22 @@ const myChart = new Chart(ctx, {
                 bodyFont: {
                     size: 14
                 },
-                usePointStyle: true, // Added
-                callbacks: { // Added
+                usePointStyle: true,
+                callbacks: { // Updated
+                    title: function(tooltipItems) {
+                        // tooltipItems is an array, but with mode 'nearest' and intersect true, it's usually one item.
+                        if (tooltipItems.length > 0) {
+                            const item = tooltipItems[0];
+                            const value = Number(item.parsed.y);
+                            if (item.parsed.y !== null) {
+                                 return '$' + value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                            }
+                        }
+                        return ''; // Return empty string if no item or no value
+                    },
                     label: function(tooltipItem) {
-                        let label = tooltipItem.dataset.label || '';
-                        if (label) {
-                            label += ': ';
-                        }
-                        if (tooltipItem.parsed.y !== null) {
-                            // Format the number as US dollars with two decimal places
-                            const value = Number(tooltipItem.parsed.y);
-                            label += '$' + value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                        }
-                        return label;
+                        // Just return the dataset label
+                        return tooltipItem.dataset.label || '';
                     }
                 }
             },
