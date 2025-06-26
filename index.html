@@ -303,7 +303,7 @@ const myChart = new Chart(ctx, {
                     size: 14
                 },
                 usePointStyle: true,
-                boxPadding: 3, // Added here
+                boxPadding: 1, // Changed here
                 borderColor: 'rgba(0,0,0,0.1)', // Added
                 borderWidth: 1,               // Added
                 callbacks: { // Updated
@@ -321,6 +321,22 @@ const myChart = new Chart(ctx, {
                     label: function(tooltipItem) {
                         // Just return the dataset label
                         return tooltipItem.dataset.label || '';
+                    },
+                    afterBody: function(tooltipItems) {
+                        // tooltipItems is an array, usually one item for 'nearest' mode.
+                        // The x-axis label (day number) is stored in tooltipItems[0].label
+                        if (tooltipItems.length > 0 && tooltipItems[0].label) {
+                            // Add some spacing, could be an empty string for a new line,
+                            // or a string with a prefix.
+                            // Returning an array of strings creates new lines.
+                            // Let's add a blank line for spacing if there's already body content,
+                            // then the day.
+                            // The body content is determined by the 'label' callback.
+                            // If the 'label' callback returns an empty string, no actual body line is drawn from it.
+                            // So, we just return the day. If label callback returns something, this comes after.
+                            return 'Day: ' + tooltipItems[0].label;
+                        }
+                        return null;
                     }
                 }
             },
