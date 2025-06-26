@@ -25,9 +25,18 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
 Chart.defaults.font.family = "'Nunito Sans', sans-serif";
-const DATA_COUNT = 12;
+const today = new Date();
+const currentDayOfMonth = today.getDate(); // Day number (1-31)
+
+// DATA_COUNT will now be the current day of the month.
+// This means the chart will show data up to the current day.
+// It's assumed the user's actual data arrays (datapoints, datapoints2, datapoints3)
+// will be populated with a length matching currentDayOfMonth by their external data source.
+// If static example data is shorter, lines will end early. If longer, extra data is ignored.
+const DATA_COUNT = currentDayOfMonth;
+
 const labels = [];
-for (let i = 0; i < DATA_COUNT; ++i) {
+for (let i = 1; i <= DATA_COUNT; ++i) { // Labels from 1 up to currentDayOfMonth
   labels.push(i.toString());
 }
 const datapoints = [0, 20, 20, 60, 60, 120, 50, 180, 120, 125, 105, 110, 170];
@@ -295,6 +304,8 @@ const myChart = new Chart(ctx, {
                 },
                 usePointStyle: true,
                 boxPadding: 3, // Added here
+                borderColor: 'rgba(0,0,0,0.1)', // Added
+                borderWidth: 1,               // Added
                 callbacks: { // Updated
                     title: function(tooltipItems) {
                         // tooltipItems is an array, but with mode 'nearest' and intersect true, it's usually one item.
@@ -326,7 +337,21 @@ const myChart = new Chart(ctx, {
                     display: false // Hide x-axis grid lines
                 },
                 ticks: {
-                    color: '#8A869F' // Color for x-axis labels
+                    color: '#8A869F',
+                    callback: function(value, index, ticks) {
+                        // `value` is the original tick value (label from `data.labels` array, e.g., "1", "2")
+                        // `this.getLabelForValue(index)` also gives the label string.
+                        const tickValueNumber = parseInt(this.getLabelForValue(index), 10);
+                        const visibleTicks = [5, 10, 15, 20, 25, 30];
+
+                        // Only show the tick if it's in our list AND less than or equal to currentDayOfMonth
+                        // (currentDayOfMonth is available in the outer scope from the code above)
+                        if (visibleTicks.includes(tickValueNumber) && tickValueNumber <= currentDayOfMonth) {
+                            return tickValueNumber.toString(); // Return the string label
+                        } else {
+                            return null; // Hide other ticks
+                        }
+                    }
                 },
                 border: { // Add this
                     display: false
