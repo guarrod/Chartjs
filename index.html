@@ -283,6 +283,16 @@ const myChart = new Chart(ctx, {
             tooltip: {
                 mode: 'index',
                 intersect: false,
+                backgroundColor: '#ffffff',
+                padding: 16,
+                titleColor: '#000000',
+                bodyColor: '#000000',
+                titleFont: {
+                    size: 14 // Or another reasonable default, as user didn't specify title font size
+                },
+                bodyFont: {
+                    size: 26
+                }
             },
             legend: {
                 display: false
