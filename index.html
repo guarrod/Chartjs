@@ -31,29 +31,53 @@ const data = {
       label: 'Cubic interpolation (monotone)',
       data: datapoints,
       borderColor: 'rgba(200, 223, 253, 1)',
-      fill: {
-              target: 'origin',
-              above: 'rgba(200, 223, 253, 0.3)',   // Area will be blue above the origin
-            },
+      fill: 'origin',
+      backgroundColor: function(context) {
+        const chart = context.chart;
+        const {ctx, chartArea} = chart;
+        if (!chartArea) {
+          return null;
+        }
+        const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+        gradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        return gradient;
+      },
       cubicInterpolationMode: 'monotone',
       tension: 0.2
     }, {
       label: 'Cubic interpolation',
       data: datapoints2,
       borderColor: 'rgba(246, 204, 226, 1)',
-      fill: {
-              target: 'origin',
-              above: 'rgba(246, 204, 226, 0.3)',   // Area will be blue above the origin
-            },
+      fill: 'origin',
+      backgroundColor: function(context) {
+        const chart = context.chart;
+        const {ctx, chartArea} = chart;
+        if (!chartArea) {
+          return null;
+        }
+        const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+        gradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        return gradient;
+      },
       tension: 0.2
     }, {
       label: 'Linear interpolation (default)',
       data: datapoints3,
       borderColor: 'rgba(205, 236, 215, 1)',
-      fill: {
-              target: 'origin',
-              above: 'rgba(205, 236, 215, 0.3)',   // Area will be blue above the origin
-            },
+      fill: 'origin',
+      backgroundColor: function(context) {
+        const chart = context.chart;
+        const {ctx, chartArea} = chart;
+        if (!chartArea) {
+          return null;
+        }
+        const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+        gradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        return gradient;
+      },
       tension: 0.2
     }
   ]
