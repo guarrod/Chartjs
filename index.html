@@ -8,12 +8,16 @@
             -webkit-user-select: none;
             -ms-user-select: none;
         }
+        .custom-legend-item:hover {
+          opacity: 0.85; /* Slight feedback on hover */
+        }
     </style>
 </head>
 <body>
     <div style="width:753px; height:300px;">
         <canvas id="myChart"></canvas>
     </div>
+    <div id="customLegendContainer" style="display: flex; flex-wrap: wrap; justify-content: center; margin-top: 10px;"></div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
 const DATA_COUNT = 12;
@@ -276,7 +280,7 @@ const myChart = new Chart(ctx, {
                 intersect: false,
             },
             legend: {
-                position: 'bottom',
+                display: false
             },
             chartAreaBackgroundImage: { // Added configuration for the image
               image: 'https://i.ibb.co/nX5JJbR/dotgrid.png'
@@ -304,6 +308,53 @@ const myChart = new Chart(ctx, {
     },
     plugins: [chartAreaBackgroundImagePlugin] // Register the plugin instance here (top-level)
 });
+
+const customLegendContainer = document.getElementById('customLegendContainer');
+
+function generateCustomLegend() {
+  // Clear existing legend items
+  customLegendContainer.innerHTML = '';
+
+  myChart.data.datasets.forEach((dataset, index) => {
+    const legendItem = document.createElement('div');
+    legendItem.classList.add('custom-legend-item');
+    legendItem.style.backgroundColor = dataset.borderColor; // Use dataset's borderColor for background
+    legendItem.style.borderRadius = '4px';
+    legendItem.style.padding = '5px 10px';
+    legendItem.style.margin = '5px';
+    legendItem.style.color = '#FFFFFF'; // White text color - assuming backgrounds will be dark enough
+    legendItem.style.cursor = 'pointer';
+    legendItem.style.display = 'inline-flex'; // Use flex for alignment if adding a swatch
+    legendItem.style.alignItems = 'center';
+
+    // Dataset label text
+    const text = document.createTextNode(dataset.label);
+
+    // Strike-through if dataset is hidden
+    if (!myChart.isDatasetVisible(index)) {
+      legendItem.style.textDecoration = 'line-through';
+      legendItem.style.opacity = '0.7'; // Dim if hidden
+    }
+
+    legendItem.appendChild(text);
+
+    // Click event to toggle dataset visibility
+    legendItem.onclick = () => {
+      myChart.setDatasetVisibility(index, !myChart.isDatasetVisible(index));
+      myChart.update();
+      generateCustomLegend(); // Regenerate legend to reflect style changes (e.g., strike-through)
+    };
+
+    customLegendContainer.appendChild(legendItem);
+  });
+}
+
+// Initial generation of the legend
+generateCustomLegend();
+
+// Optional: if you have plugins that might add/remove datasets dynamically,
+// you might need to regenerate the legend. For this case, it's likely not needed.
+// For instance, an observer on myChart.data.datasets could trigger regenerateCustomLegend().
     </script>
 </body>
 </html>
