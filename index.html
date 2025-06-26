@@ -288,12 +288,13 @@ const myChart = new Chart(ctx, {
                 titleColor: '#000000',
                 bodyColor: '#000000',
                 titleFont: {
-                    size: 26
+                    size: 22
                 },
                 bodyFont: {
                     size: 14
                 },
                 usePointStyle: true,
+                boxPadding: 3, // Added here
                 callbacks: { // Updated
                     title: function(tooltipItems) {
                         // tooltipItems is an array, but with mode 'nearest' and intersect true, it's usually one item.
