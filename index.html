@@ -292,6 +292,21 @@ const myChart = new Chart(ctx, {
                 },
                 bodyFont: {
                     size: 14
+                },
+                usePointStyle: true, // Added
+                callbacks: { // Added
+                    label: function(tooltipItem) {
+                        let label = tooltipItem.dataset.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (tooltipItem.parsed.y !== null) {
+                            // Format the number as US dollars with two decimal places
+                            const value = Number(tooltipItem.parsed.y);
+                            label += '$' + value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        }
+                        return label;
+                    }
                 }
             },
             legend: {
