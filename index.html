@@ -306,8 +306,8 @@ const myChart = new Chart(ctx, {
         size: 12
     },
     usePointStyle: false, // Changed
-    boxWidth: 2,          // Added
-    boxHeight: 2,         // Added
+    boxWidth: 3,          // Changed
+    boxHeight: 3,         // Changed
     boxPadding: 0, // Changed here
                 borderColor: 'rgba(0,0,0,0.1)', // Added
                 borderWidth: 1,               // Added
@@ -325,8 +325,9 @@ const myChart = new Chart(ctx, {
                         return ''; // Return empty string if no item or no value
                     },
                     label: function(tooltipItem) {
-                        // Just return the dataset label
-                        return tooltipItem.dataset.label || '';
+                        // Prepend non-breaking spaces to simulate margin-right after the swatch
+                        const labelPrefix = '\u00A0\u00A0\u00A0'; // 3 non-breaking spaces
+                        return labelPrefix + (tooltipItem.dataset.label || '');
                     },
                     afterBody: function(tooltipItems) {
                         if (tooltipItems.length > 0 && tooltipItems[0].label) {
