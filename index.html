@@ -370,7 +370,7 @@ const myChart = new Chart(ctx, {
 
                             // currentDayOfMonth is accessible from the outer scope
                             if (visibleTickDays.includes(dayNumber) && dayNumber <= currentDayOfMonth) {
-                                return fullDateLabel; // Return the full formatted date string for display
+                                return dayPartMatch[1]; // Return only the "DD" part (e.g., "05", "10")
                             }
                         }
                         return null; // Hide other ticks
