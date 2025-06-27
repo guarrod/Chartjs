@@ -294,10 +294,10 @@ const myChart = new Chart(ctx, {
                 intersect: true,  // Changed
                 backgroundColor: '#ffffff',
                 padding: 16,
-                titleColor: '#000000',
+                titleColor: '#898989', // Changed
                 bodyColor: '#000000',
                 titleFont: {
-                    size: 22
+                    size: 20 // Changed
                 },
                 bodyFont: {
                     size: 14
@@ -305,9 +305,7 @@ const myChart = new Chart(ctx, {
     footerFont: { // Added
         size: 12
     },
-    usePointStyle: false, // Changed
-    boxWidth: 3,          // Changed
-    boxHeight: 3,         // Changed
+    usePointStyle: true, // Changed
     boxPadding: 0, // Changed here
                 borderColor: 'rgba(0,0,0,0.1)', // Added
                 borderWidth: 1,               // Added
@@ -331,10 +329,10 @@ const myChart = new Chart(ctx, {
                     },
                     afterBody: function(tooltipItems) {
                         if (tooltipItems.length > 0 && tooltipItems[0].label) {
-                            // Return an array with an empty string for spacing, then the label
-                            return ['', tooltipItems[0].label];
+                            // Just return the label (day number string)
+                            return tooltipItems[0].label;
                         }
-                        return null; // Or return []; if that's more appropriate for no content
+                        return null;
                     }
                 }
             },
