@@ -97,7 +97,7 @@ const data = {
       },
       cubicInterpolationMode: 'monotone',
       tension: 0.2,
-      pointRadius: 2,
+      pointRadius: 1,
       pointBorderWidth: 3,
       pointHoverRadius: 8,
       pointBackgroundColor: 'rgba(200, 223, 253, 1)',
@@ -155,7 +155,8 @@ const data = {
         return gradient;
       },
       tension: 0.2,
-      pointRadius: 2,
+      pointRadius: 1,
+      pointRadius: 1,
       pointBorderWidth: 3,
       pointHoverRadius: 8,
       pointBackgroundColor: 'rgba(246, 204, 226, 1)',
@@ -329,8 +330,8 @@ const myChart = new Chart(ctx, {
                     },
                     afterBody: function(tooltipItems) {
                         if (tooltipItems.length > 0 && tooltipItems[0].label) {
-                            // Just return the label (day number string)
-                            return tooltipItems[0].label;
+                            // Return an array with an empty string for spacing, then the label
+                            return ['', tooltipItems[0].label];
                         }
                         return null;
                     }
